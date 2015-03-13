@@ -24,15 +24,15 @@
 </div>  
 
 <script type="text/javascript">
-	var myControllers = angular.module('myControllers', []);
+  var myControllers = angular.module('myControllers', []);
 
-	myControllers.factory('myService', ['$rootScope', function($rootScope) {
+  myControllers.factory('myService', ['$rootScope', function($rootScope) {
     var instance = { data: 0 };
 
     return instance;
   }]);
 
-	myControllers.controller('myController1', ['$scope', 'myService', '$interval', '$rootScope', function($scope, myService, $interval, $rootScope){
+  myControllers.controller('myController1', ['$scope', 'myService', '$interval', '$rootScope', function($scope, myService, $interval, $rootScope){
    $scope.getData = function() {
     return myService;
   }
@@ -51,7 +51,7 @@
   }
 }]);
 
-	myControllers.controller('myController2', ['$scope', 'myService', function($scope, myService){
+  myControllers.controller('myController2', ['$scope', 'myService', function($scope, myService){
    $scope.getData = function() {
     return myService;
   }
@@ -63,12 +63,12 @@
   });
 }]);
 
-	var myApp = angular.module('myApp', [
+  var myApp = angular.module('myApp', [
    'ngRoute',
    'myControllers'
    ]);
 
-	myApp.config(['$routeProvider',function($routeProvider) {
+  myApp.config(['$routeProvider',function($routeProvider) {
    $routeProvider.
    when("/first",{ controller: "myController1", templateUrl: "temp1.html"}).
    when("/second", {controller: "myController2", templateUrl: "temp2.html"}).
