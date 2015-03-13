@@ -1,0 +1,81 @@
+<html>
+<head>
+  <script src="https://code.angularjs.org/1.4.0-beta.4/angular.min.js"></script>
+  <script src="https://code.angularjs.org/1.4.0-beta.4/angular-route.min.js"></script>
+</head>
+<body>
+
+  <div style="padding: 0 0 20px 0">
+   <a href="#/first">First controller</a> | <a href="#/second">Second controller</a>
+ </div>
+
+ <div ng-app="myApp">
+  <div ng-view></div>
+
+  <script type="text/ng-template" id="temp1.html">
+    Data: <span ng-bind="getData().data"></span>
+    <br/>
+    <button ng-click="start()">Start counter</button>
+  </script>
+  
+  <script type="text/ng-template" id="temp2.html">
+    Data: <span ng-bind="getData().data"></span>
+  </script>
+</div>  
+
+<script type="text/javascript">
+	var myControllers = angular.module('myControllers', []);
+
+	myControllers.factory('myService', ['$rootScope', function($rootScope) {
+    var instance = { data: 0 };
+
+    return instance;
+  }]);
+
+	myControllers.controller('myController1', ['$scope', 'myService', '$interval', '$rootScope', function($scope, myService, $interval, $rootScope){
+   $scope.getData = function() {
+    return myService;
+  }
+
+  $scope.$on('myupdate', function() {
+    if (!$scope.$$phase) {
+      $scope.$apply();
+    }        
+  });
+
+  $scope.start = function() {
+    setInterval(function() {
+     myService.data++;
+     $rootScope.$broadcast('myupdate');
+   }, 1000)
+  }
+}]);
+
+	myControllers.controller('myController2', ['$scope', 'myService', function($scope, myService){
+   $scope.getData = function() {
+    return myService;
+  }
+
+  $scope.$on('myupdate', function() {
+    if (!$scope.$$phase) {
+      $scope.$apply();
+    }        
+  });
+}]);
+
+	var myApp = angular.module('myApp', [
+   'ngRoute',
+   'myControllers'
+   ]);
+
+	myApp.config(['$routeProvider',function($routeProvider) {
+   $routeProvider.
+   when("/first",{ controller: "myController1", templateUrl: "temp1.html"}).
+   when("/second", {controller: "myController2", templateUrl: "temp2.html"}).
+   otherwise({redirectTo : "/first"});
+ }]);
+
+</script>
+
+</body>
+</html>
